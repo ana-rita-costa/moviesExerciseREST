@@ -1,2 +1,2 @@
 # moviesExerciseREST
-Manage movie data though CRUD operations using Java and Spring
+Manage movie data through CRUD operations using Java and Spring
