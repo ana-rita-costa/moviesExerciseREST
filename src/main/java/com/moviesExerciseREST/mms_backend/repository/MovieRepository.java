@@ -9,6 +9,6 @@ import java.util.List;
 public interface MovieRepository extends JpaRepository<MovieEntity, Long> {
 
     List<MovieEntity> findByTitle(String title);
-
     List<MovieEntity> findByDate(LocalDate date);
+
 }

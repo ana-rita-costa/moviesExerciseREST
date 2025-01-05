@@ -2,6 +2,7 @@ package com.moviesExerciseREST.mms_backend.controller;
 
 import com.moviesExerciseREST.mms_backend.entity.MovieEntity;
 import com.moviesExerciseREST.mms_backend.service.CreateMovieService;
+import com.moviesExerciseREST.mms_backend.service.DeleteMovieService;
 import com.moviesExerciseREST.mms_backend.service.GetMovieService;
 import com.moviesExerciseREST.mms_backend.service.UpdateMovieService;
 import org.springframework.http.HttpStatus;
@@ -21,13 +22,21 @@ public class MovieController {
     private final CreateMovieService createMovieService;
     private final GetMovieService getMovieService;
     private final UpdateMovieService updateMovieService;
+    private final DeleteMovieService deleteMovieService;
+
 
 
     //Create controller
-    public MovieController(CreateMovieService createMovieService, GetMovieService getMovieService, UpdateMovieService updateMovieService) {
+    public MovieController(CreateMovieService createMovieService,
+                           GetMovieService getMovieService,
+                           UpdateMovieService updateMovieService,
+                           DeleteMovieService deleteMovieService)
+    {
         this.createMovieService = createMovieService;
         this.getMovieService = getMovieService;
         this.updateMovieService = updateMovieService;
+        this.deleteMovieService = deleteMovieService;
+
     }
 
     //Define Endpoints
@@ -77,7 +86,7 @@ public class MovieController {
                 : new ResponseEntity<>(movies, HttpStatus.OK); // Return matching movies
     }
 
-    //UPDATE Operations
+    //UPDATE Operation
     /*------------------*/
     @PatchMapping("/api/movies/{id}")
     public ResponseEntity<MovieEntity> updateMovie(
@@ -91,5 +100,19 @@ public class MovieController {
             return ResponseEntity.notFound().build(); // Handle movie not found scenario
         }
     }
+
+    //DELETE Operation
+    /*------------------*/
+    @DeleteMapping("/api/movies/{id}")
+    public ResponseEntity<List<MovieEntity>> removeMovie(@PathVariable Long id) {
+        try {
+            deleteMovieService.removeMovie(id);  // Call the service to delete the movie
+            List<MovieEntity> movies = getMovieService.findAll();
+            return ResponseEntity.ok(movies);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();  // Return 404 Not Found if movie is not found
+        }
+    }
+
 
 }

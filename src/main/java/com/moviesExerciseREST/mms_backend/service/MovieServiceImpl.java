@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
-public class MovieServiceImpl implements CreateMovieService, GetMovieService, UpdateMovieService {
+public class MovieServiceImpl implements CreateMovieService, GetMovieService, UpdateMovieService, DeleteMovieService {
 
     private final MovieRepository movieRepository;
 
@@ -77,4 +77,15 @@ public class MovieServiceImpl implements CreateMovieService, GetMovieService, Up
             throw new RuntimeException("Movie not found");
         }
     }
+
+    //Implement DELETE method
+    @Override
+    public void removeMovie(Long id) {
+        if (movieRepository.existsById(id)) {  // Optional: Check if the movie exists first
+            movieRepository.deleteById(id);    // This should work now
+        } else {
+            throw new RuntimeException("Movie not found");
+        }
+    }
+
 }
