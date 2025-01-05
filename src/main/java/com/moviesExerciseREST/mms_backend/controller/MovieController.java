@@ -3,11 +3,13 @@ package com.moviesExerciseREST.mms_backend.controller;
 import com.moviesExerciseREST.mms_backend.entity.MovieEntity;
 import com.moviesExerciseREST.mms_backend.service.CreateMovieService;
 import com.moviesExerciseREST.mms_backend.service.GetMovieService;
+import com.moviesExerciseREST.mms_backend.service.UpdateMovieService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.time.LocalDate;
 
@@ -18,11 +20,14 @@ public class MovieController {
     //Declare services
     private final CreateMovieService createMovieService;
     private final GetMovieService getMovieService;
+    private final UpdateMovieService updateMovieService;
+
 
     //Create controller
-    public MovieController(CreateMovieService createMovieService, GetMovieService getMovieService) {
+    public MovieController(CreateMovieService createMovieService, GetMovieService getMovieService, UpdateMovieService updateMovieService) {
         this.createMovieService = createMovieService;
         this.getMovieService = getMovieService;
+        this.updateMovieService = updateMovieService;
     }
 
     //Define Endpoints
@@ -72,6 +77,19 @@ public class MovieController {
                 : new ResponseEntity<>(movies, HttpStatus.OK); // Return matching movies
     }
 
+    //UPDATE Operations
+    /*------------------*/
+    @PatchMapping("/api/movies/{id}")
+    public ResponseEntity<MovieEntity> updateMovie(
+            @PathVariable Long id,
+            @RequestBody Map<String, Object> updates) {
 
+        try {
+            MovieEntity updatedMovie = updateMovieService.updateMovie(id, updates);
+            return ResponseEntity.ok(updatedMovie);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build(); // Handle movie not found scenario
+        }
+    }
 
 }

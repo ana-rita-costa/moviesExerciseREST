@@ -6,10 +6,11 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
-public class MovieServiceImpl implements CreateMovieService, GetMovieService {
+public class MovieServiceImpl implements CreateMovieService, GetMovieService, UpdateMovieService {
 
     private final MovieRepository movieRepository;
 
@@ -17,13 +18,13 @@ public class MovieServiceImpl implements CreateMovieService, GetMovieService {
         this.movieRepository = movieRepository;
     }
 
-    //Implement Create methods
+    //Implement CREATE method
     @Override
     public MovieEntity create(MovieEntity movie){
         return movieRepository.save(movie);
     }
 
-    //Implement Get methods
+    //Implement READ methods
     @Override
     public List<MovieEntity> findAll() {
         return movieRepository.findAll();
@@ -44,5 +45,36 @@ public class MovieServiceImpl implements CreateMovieService, GetMovieService {
         return movieRepository.findByDate(date);
     }
 
+    //Implement UPDATE method
+    @Override
+    public MovieEntity updateMovie(Long id, Map<String, Object> updates) {
+        Optional<MovieEntity> movieOptional = movieRepository.findById(id);
 
+        if (movieOptional.isPresent()) {
+            MovieEntity movie = movieOptional.get();
+
+            // Apply updates (using a utility or manually)
+            updates.forEach((key, value) -> {
+                switch (key) {
+                    case "title":
+                        movie.setTitle((String) value);
+                        break;
+                    case "date":
+                        movie.setDate(LocalDate.parse((String) value));
+                        break;
+                    case "rank":
+                        movie.setRank(Double.valueOf(value.toString()));
+                        break;
+                    case "revenue":
+                        movie.setRevenue(Double.valueOf(value.toString()));
+                        break;
+                }
+            });
+
+            // Save updated movie
+            return movieRepository.save(movie);
+        } else {
+            throw new RuntimeException("Movie not found");
+        }
+    }
 }
