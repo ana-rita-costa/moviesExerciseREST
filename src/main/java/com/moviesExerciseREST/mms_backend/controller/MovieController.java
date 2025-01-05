@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.time.LocalDate;
 
 @RestController
 //@RequestMapping("/api/movies")
@@ -27,21 +28,31 @@ public class MovieController {
     //Define Endpoints
     /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
-    //Create Operation
+    //CREATE Operation
+    /*------------------*/
     @PostMapping("/api/movies")
     public ResponseEntity<MovieEntity> createMovie(@RequestBody MovieEntity movieEnt){
         return new ResponseEntity<>(createMovieService.create(movieEnt), HttpStatus.CREATED);
     }
 
-    //Read Operation
-
+    //READ Operations
+    /*------------------*/
     // Fetch all movies
     @GetMapping("/api/movies")
-    public ResponseEntity<List<MovieEntity>> getAllMovies() {
-        List<MovieEntity> movies = getMovieService.findAll();
-        return movies.isEmpty()
-                ? new ResponseEntity<>(HttpStatus.NO_CONTENT) // No movies found
-                : new ResponseEntity<>(movies, HttpStatus.OK); // Return all movies
+    public ResponseEntity<List<MovieEntity>> getMoviesFilteredByDate(@RequestParam(required = false) LocalDate date) {
+        if (date != null) {
+            // Filter movies by date
+            List<MovieEntity> movies = getMovieService.findByDate(date);
+            return movies.isEmpty()
+                    ? new ResponseEntity<>(HttpStatus.NO_CONTENT) // No movies match the date
+                    : new ResponseEntity<>(movies, HttpStatus.OK); // Return movies matching the date
+        } else {
+            // Return all movies if no date is provided
+            List<MovieEntity> movies = getMovieService.findAll();
+            return movies.isEmpty()
+                    ? new ResponseEntity<>(HttpStatus.NO_CONTENT) // No movies found
+                    : new ResponseEntity<>(movies, HttpStatus.OK); // Return all movies
+        }
     }
 
     // Fetch a specific movie by ID

@@ -2,6 +2,7 @@ package com.moviesExerciseREST.mms_backend.service;
 
 import com.moviesExerciseREST.mms_backend.entity.MovieEntity;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,4 +15,6 @@ public interface GetMovieService {
 
     // Method to find movies by title
     List<MovieEntity> findByTitle(String title);
+
+    List<MovieEntity> findByDate(LocalDate date);
 }

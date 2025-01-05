@@ -4,6 +4,7 @@ import com.moviesExerciseREST.mms_backend.entity.MovieEntity;
 import com.moviesExerciseREST.mms_backend.repository.MovieRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,4 +38,11 @@ public class MovieServiceImpl implements CreateMovieService, GetMovieService {
     public List<MovieEntity> findByTitle(String title) {
         return movieRepository.findByTitle(title);
     }
+
+    @Override
+    public List<MovieEntity> findByDate(LocalDate date) {
+        return movieRepository.findByDate(date);
+    }
+
+
 }
