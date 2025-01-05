@@ -16,8 +16,8 @@ import java.time.LocalDate;
 public class MovieController {
 
     //Declare services
-    private CreateMovieService createMovieService;
-    private GetMovieService getMovieService;
+    private final CreateMovieService createMovieService;
+    private final GetMovieService getMovieService;
 
     //Create controller
     public MovieController(CreateMovieService createMovieService, GetMovieService getMovieService) {
@@ -72,28 +72,6 @@ public class MovieController {
                 : new ResponseEntity<>(movies, HttpStatus.OK); // Return matching movies
     }
 
-
-    /*@GetMapping("/api/movies")
-    public ResponseEntity<?> getMovies(@RequestParam(required = false) Long id, @RequestParam(required = false) String title) {
-        if (id != null) {
-            // Fetch movie by id
-            Optional<MovieEntity> movie = getMovieService.findById(id);
-            return movie.map(value -> new ResponseEntity<>(value, HttpStatus.OK)) // Movie found
-                    .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND)); // Movie not found
-        } else if (title != null) {
-            // Fetch movies by title
-            List<MovieEntity> movies = getMovieService.findByTitle(title);
-            return movies.isEmpty()
-                    ? new ResponseEntity<>(HttpStatus.NO_CONTENT) // No content if no movies match the title
-                    : new ResponseEntity<>(movies, HttpStatus.OK); // Return matching movies with 200 OK
-        } else {
-            // Fetch all movies
-            List<MovieEntity> movies = getMovieService.findAll();
-            return movies.isEmpty()
-                    ? new ResponseEntity<>(HttpStatus.NO_CONTENT) // No content if no movies are found
-                    : new ResponseEntity<>(movies, HttpStatus.OK); // Return movies with 200 OK
-        }
-    }*/
 
 
 }
