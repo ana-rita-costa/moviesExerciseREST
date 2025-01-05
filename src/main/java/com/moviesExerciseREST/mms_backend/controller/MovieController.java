@@ -3,10 +3,12 @@ package com.moviesExerciseREST.mms_backend.controller;
 import com.moviesExerciseREST.mms_backend.entity.MovieEntity;
 import com.moviesExerciseREST.mms_backend.exception.MissingFieldException;
 import com.moviesExerciseREST.mms_backend.service.*;
+import com.moviesExerciseREST.mms_backend.type.ResultType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -15,7 +17,6 @@ import java.time.LocalDate;
 @RestController
 //@RequestMapping("/api/movies")
 public class MovieController {
-
 
     private final MovieServiceImpl movieService;
 
@@ -39,19 +40,24 @@ public class MovieController {
     /*------------------*/
     // Fetch all movies
     @GetMapping("/api/movies")
-    public ResponseEntity<List<MovieEntity>> getMoviesFilteredByDate(@RequestParam(required = false) LocalDate date) {
-        if (date != null) {
-            // Filter movies by date
-            List<MovieEntity> movies = movieService.findByDate(date);
-            return movies.isEmpty()
-                    ? new ResponseEntity<>(HttpStatus.NO_CONTENT) // No movies match the date
-                    : new ResponseEntity<>(movies, HttpStatus.OK); // Return movies matching the date
-        } else {
-            // Return all movies if no date is provided
-            List<MovieEntity> movies = movieService.findAll();
-            return movies.isEmpty()
-                    ? new ResponseEntity<>(HttpStatus.NO_CONTENT) // No movies found
-                    : new ResponseEntity<>(movies, HttpStatus.OK); // Return all movies
+    public HashMap<String,Object> getMoviesFilteredByDate(@RequestParam(required = false) String date) {
+        ResultType<List<MovieEntity>> resultType = new ResultType<>();
+
+        try {
+            if (date != null) {
+                // Filter movies by date
+                List<MovieEntity> movies = movieService.findByDate(date);
+                resultType.setResult(movies);
+                return resultType.asMap(); // Return movies matching the date
+            } else {
+                // Return all movies if no date is provided
+                List<MovieEntity> movies = movieService.findAll();
+                resultType.setResult(movies);
+                return resultType.asMap(); // Return all movies found
+            }
+        }catch(Exception e){
+            resultType.setError(e.toString());
+            return resultType.asMap();
         }
     }
 

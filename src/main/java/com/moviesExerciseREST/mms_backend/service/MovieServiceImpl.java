@@ -1,6 +1,7 @@
 package com.moviesExerciseREST.mms_backend.service;
 
 import com.moviesExerciseREST.mms_backend.entity.MovieEntity;
+import com.moviesExerciseREST.mms_backend.exception.InvalidValuesException;
 import com.moviesExerciseREST.mms_backend.exception.MissingFieldException;
 import com.moviesExerciseREST.mms_backend.repository.MovieRepository;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import static com.moviesExerciseREST.mms_backend.utils.Utils.isValidDate;
 
 @Service
 public class MovieServiceImpl implements MovieService {
@@ -45,8 +48,12 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<MovieEntity> findByDate(LocalDate date) {
-        return movieRepository.findByDate(date);
+    public List<MovieEntity> findByDate(String date) throws InvalidValuesException{
+
+        if(isValidDate(date)) throw new InvalidValuesException("date");
+        LocalDate d;
+        d=LocalDate.parse(date);
+        return movieRepository.findByDate(d);
     }
 
     //Implement UPDATE method

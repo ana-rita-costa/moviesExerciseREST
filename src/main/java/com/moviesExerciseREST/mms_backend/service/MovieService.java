@@ -1,6 +1,7 @@
 package com.moviesExerciseREST.mms_backend.service;
 
 import com.moviesExerciseREST.mms_backend.entity.MovieEntity;
+import com.moviesExerciseREST.mms_backend.exception.InvalidValuesException;
 import com.moviesExerciseREST.mms_backend.exception.MissingFieldException;
 
 import java.time.LocalDate;
@@ -20,7 +21,7 @@ public interface MovieService {
     // Method to find movies by title
     List<MovieEntity> findByTitle(String title);
 
-    List<MovieEntity> findByDate(LocalDate date);
+    List<MovieEntity> findByDate(String date) throws InvalidValuesException;
 
     MovieEntity updateMovie(Long id, Map<String, Object> updates);
 
