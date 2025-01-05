@@ -1,6 +1,7 @@
 package com.moviesExerciseREST.mms_backend.service;
 
 import com.moviesExerciseREST.mms_backend.entity.MovieEntity;
+import com.moviesExerciseREST.mms_backend.exception.MissingFieldException;
 import com.moviesExerciseREST.mms_backend.repository.MovieRepository;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +11,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
-public class MovieServiceImpl implements CreateMovieService, GetMovieService, UpdateMovieService, DeleteMovieService {
+public class MovieServiceImpl implements MovieService {
 
     private final MovieRepository movieRepository;
 
@@ -20,7 +21,10 @@ public class MovieServiceImpl implements CreateMovieService, GetMovieService, Up
 
     //Implement CREATE method
     @Override
-    public MovieEntity create(MovieEntity movie){
+    public MovieEntity create(MovieEntity movie) throws MissingFieldException{
+        if(movie.getTitle() == null ) throw new MissingFieldException("title");
+        if(movie.getDate() == null ) throw new MissingFieldException("date");
+
         return movieRepository.save(movie);
     }
 

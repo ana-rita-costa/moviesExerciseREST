@@ -1,10 +1,8 @@
 package com.moviesExerciseREST.mms_backend.controller;
 
 import com.moviesExerciseREST.mms_backend.entity.MovieEntity;
-import com.moviesExerciseREST.mms_backend.service.CreateMovieService;
-import com.moviesExerciseREST.mms_backend.service.DeleteMovieService;
-import com.moviesExerciseREST.mms_backend.service.GetMovieService;
-import com.moviesExerciseREST.mms_backend.service.UpdateMovieService;
+import com.moviesExerciseREST.mms_backend.exception.MissingFieldException;
+import com.moviesExerciseREST.mms_backend.service.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,25 +16,13 @@ import java.time.LocalDate;
 //@RequestMapping("/api/movies")
 public class MovieController {
 
-    //Declare services
-    private final CreateMovieService createMovieService;
-    private final GetMovieService getMovieService;
-    private final UpdateMovieService updateMovieService;
-    private final DeleteMovieService deleteMovieService;
 
-
+    private final MovieServiceImpl movieService;
 
     //Create controller
-    public MovieController(CreateMovieService createMovieService,
-                           GetMovieService getMovieService,
-                           UpdateMovieService updateMovieService,
-                           DeleteMovieService deleteMovieService)
+    public MovieController(MovieServiceImpl movieService)
     {
-        this.createMovieService = createMovieService;
-        this.getMovieService = getMovieService;
-        this.updateMovieService = updateMovieService;
-        this.deleteMovieService = deleteMovieService;
-
+        this.movieService = movieService;
     }
 
     //Define Endpoints
@@ -45,8 +31,8 @@ public class MovieController {
     //CREATE Operation
     /*------------------*/
     @PostMapping("/api/movies")
-    public ResponseEntity<MovieEntity> createMovie(@RequestBody MovieEntity movieEnt){
-        return new ResponseEntity<>(createMovieService.create(movieEnt), HttpStatus.CREATED);
+    public ResponseEntity<MovieEntity> createMovie(@RequestBody MovieEntity movieEnt) throws MissingFieldException {
+        return new ResponseEntity<>(movieService.create(movieEnt), HttpStatus.CREATED);
     }
 
     //READ Operations
@@ -56,13 +42,13 @@ public class MovieController {
     public ResponseEntity<List<MovieEntity>> getMoviesFilteredByDate(@RequestParam(required = false) LocalDate date) {
         if (date != null) {
             // Filter movies by date
-            List<MovieEntity> movies = getMovieService.findByDate(date);
+            List<MovieEntity> movies = movieService.findByDate(date);
             return movies.isEmpty()
                     ? new ResponseEntity<>(HttpStatus.NO_CONTENT) // No movies match the date
                     : new ResponseEntity<>(movies, HttpStatus.OK); // Return movies matching the date
         } else {
             // Return all movies if no date is provided
-            List<MovieEntity> movies = getMovieService.findAll();
+            List<MovieEntity> movies = movieService.findAll();
             return movies.isEmpty()
                     ? new ResponseEntity<>(HttpStatus.NO_CONTENT) // No movies found
                     : new ResponseEntity<>(movies, HttpStatus.OK); // Return all movies
@@ -72,7 +58,7 @@ public class MovieController {
     // Fetch a specific movie by ID
     @GetMapping("/api/movies/{id}")
     public ResponseEntity<MovieEntity> getMovieById(@PathVariable Long id) {
-        Optional<MovieEntity> movie = getMovieService.findById(id);
+        Optional<MovieEntity> movie = movieService.findById(id);
         return movie.map(value -> new ResponseEntity<>(value, HttpStatus.OK)) // Movie found
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND)); // Movie not found
     }
@@ -80,7 +66,7 @@ public class MovieController {
     // Fetch movies by title
     @GetMapping(value = "/api/movies", params = "title")
     public ResponseEntity<List<MovieEntity>> getMoviesByTitle(@RequestParam String title) {
-        List<MovieEntity> movies = getMovieService.findByTitle(title);
+        List<MovieEntity> movies = movieService.findByTitle(title);
         return movies.isEmpty()
                 ? new ResponseEntity<>(HttpStatus.NO_CONTENT) // No movies found
                 : new ResponseEntity<>(movies, HttpStatus.OK); // Return matching movies
@@ -94,7 +80,7 @@ public class MovieController {
             @RequestBody Map<String, Object> updates) {
 
         try {
-            MovieEntity updatedMovie = updateMovieService.updateMovie(id, updates);
+            MovieEntity updatedMovie = movieService.updateMovie(id, updates);
             return ResponseEntity.ok(updatedMovie);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build(); // Handle movie not found scenario
@@ -106,8 +92,8 @@ public class MovieController {
     @DeleteMapping("/api/movies/{id}")
     public ResponseEntity<List<MovieEntity>> removeMovie(@PathVariable Long id) {
         try {
-            deleteMovieService.removeMovie(id);  // Call the service to delete the movie
-            List<MovieEntity> movies = getMovieService.findAll();
+            movieService.removeMovie(id);  // Call the service to delete the movie
+            List<MovieEntity> movies = movieService.findAll();
             return ResponseEntity.ok(movies);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();  // Return 404 Not Found if movie is not found

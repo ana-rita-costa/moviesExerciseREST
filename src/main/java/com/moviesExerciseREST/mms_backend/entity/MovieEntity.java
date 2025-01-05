@@ -12,8 +12,8 @@ import java.time.LocalDate;
 public class MovieEntity {
 
     @Id
-    @GeneratedValue//(strategy = GenerationType.IDENTITY)
-    //@ColumnDefault("nextval('movie_id_seq')")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @ColumnDefault("nextval('movie_id_seq')")
     @Column(name = "id", nullable = false)
     private Long id;
 
@@ -34,7 +34,7 @@ public class MovieEntity {
     private byte[] poster;
 
 
-    public MovieEntity(Long id, String title, LocalDate date, Double rank, Double revenue) {
+    /*public MovieEntity(Long id, String title, LocalDate date, Double rank, Double revenue) {
         this.id = id;
         this.title = title;
         this.date = date;
@@ -43,7 +43,7 @@ public class MovieEntity {
         //this.poster = poster;
     }
 
-    MovieEntity(){}
+    MovieEntity(){}*/
 
     //Getters and setters
     public Long getId() {
