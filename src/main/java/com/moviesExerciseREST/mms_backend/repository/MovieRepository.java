@@ -12,5 +12,4 @@ public interface MovieRepository extends JpaRepository<MovieEntity, Long> {
     List<MovieEntity> findByDate(LocalDate date);
     boolean existsByTitleAndDate(String title, LocalDate date);
 
-
 }

@@ -1,6 +1,7 @@
 package com.moviesExerciseREST.mms_backend.service;
 
 import com.moviesExerciseREST.mms_backend.entity.MovieEntity;
+import com.moviesExerciseREST.mms_backend.exception.DuplicatedRecordException;
 import com.moviesExerciseREST.mms_backend.exception.InvalidValuesException;
 import com.moviesExerciseREST.mms_backend.exception.MissingFieldException;
 
@@ -11,12 +12,9 @@ import java.util.Optional;
 
 public interface MovieService {
 
-    MovieEntity create(MovieEntity movie) throws MissingFieldException;
+    MovieEntity create(MovieEntity movie) throws MissingFieldException, DuplicatedRecordException;
 
     List<MovieEntity> findAll();
-
-    // Method to get a movie by its ID
-    Optional<MovieEntity> findById(Long id);
 
     // Method to find movies by title
     List<MovieEntity> findByTitle(String title);
@@ -27,6 +25,8 @@ public interface MovieService {
 
     void removeMovie(Long id);
 
-    boolean existsByTitleAndDate(String title, LocalDate date);
+    /*boolean existsByTitleAndDate(String title, LocalDate date);*/
+
+    MovieEntity getMovie(Long id);
 
 }

@@ -22,8 +22,7 @@ public class MovieController {
     private final MovieServiceImpl movieService;
 
     //Create controller
-    public MovieController(MovieServiceImpl movieService)
-    {
+    public MovieController(MovieServiceImpl movieService) {
         this.movieService = movieService;
     }
 
@@ -33,17 +32,18 @@ public class MovieController {
     //CREATE Operation
     /*------------------*/
     @PostMapping("/api/movies")
-    public HashMap<String,Object> createMovie(@RequestBody MovieEntity movieEnt) throws MissingFieldException {
+    public HashMap<String,Object> createMovie(@RequestBody MovieEntity movieEnt) throws MissingFieldException, DuplicatedRecordException {
         ResultType<MovieEntity> resultType = new ResultType<>();
 
-        // Check if a movie with the same name and date already exists
-
-        if (!movieService.existsByTitleAndDate(movieEnt.getTitle(), movieEnt.getDate())) {
+        try {
             MovieEntity newMovie = movieService.create(movieEnt);
             resultType.setResult(newMovie);
-        }
 
-        return resultType.asMap();
+            return resultType.asMap();
+        }catch(Exception e){
+            resultType.setError(e.toString());
+            return resultType.asMap();
+        }
     }
 
     //READ Operations
@@ -73,47 +73,62 @@ public class MovieController {
 
     // Fetch a specific movie by ID
     @GetMapping("/api/movies/{id}")
-    public ResponseEntity<MovieEntity> getMovieById(@PathVariable Long id) {
-        Optional<MovieEntity> movie = movieService.findById(id);
-        return movie.map(value -> new ResponseEntity<>(value, HttpStatus.OK)) // Movie found
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND)); // Movie not found
+    public HashMap<String,Object> getMovieById(@PathVariable Long id) {
+        ResultType<MovieEntity> resultType = new ResultType<>();
+
+        try{
+            MovieEntity movie = movieService.getMovie(id);
+            resultType.setResult(movie);
+            return resultType.asMap();
+
+        } catch(Exception e){
+            resultType.setError(e.toString());
+            return resultType.asMap();
+        }
+
     }
 
     // Fetch movies by title
     @GetMapping(value = "/api/movies", params = "title")
-    public ResponseEntity<List<MovieEntity>> getMoviesByTitle(@RequestParam String title) {
-        List<MovieEntity> movies = movieService.findByTitle(title);
-        return movies.isEmpty()
-                ? new ResponseEntity<>(HttpStatus.NO_CONTENT) // No movies found
-                : new ResponseEntity<>(movies, HttpStatus.OK); // Return matching movies
+    public HashMap<String,Object> getMoviesByTitle(@RequestParam String title) {
+
+        ResultType<List<MovieEntity>> resultType = new ResultType<>();
+
+        try {
+            List<MovieEntity> movies = movieService.findByTitle(title);
+            resultType.setResult(movies);
+            return resultType.asMap(); // Return matching movies
+
+        }catch(Exception e){
+            resultType.setError(e.toString());
+            return resultType.asMap();
+        }
+
     }
 
     //UPDATE Operation
     /*------------------*/
     @PatchMapping("/api/movies/{id}")
-    public ResponseEntity<MovieEntity> updateMovie(
+    public HashMap<String,Object> updateMovie(
             @PathVariable Long id,
             @RequestBody Map<String, Object> updates) {
 
+        ResultType<MovieEntity> resultType = new ResultType<>();
         try {
             MovieEntity updatedMovie = movieService.updateMovie(id, updates);
-            return ResponseEntity.ok(updatedMovie);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build(); // Handle movie not found scenario
+            resultType.setResult(updatedMovie);
+            return resultType.asMap();
+        } catch(Exception e){
+            resultType.setError(e.toString());
+            return resultType.asMap();
         }
     }
 
     //DELETE Operation
     /*------------------*/
     @DeleteMapping("/api/movies/{id}")
-    public ResponseEntity<List<MovieEntity>> removeMovie(@PathVariable Long id) {
-        try {
-            movieService.removeMovie(id);  // Call the service to delete the movie
-            List<MovieEntity> movies = movieService.findAll();
-            return ResponseEntity.ok(movies);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();  // Return 404 Not Found if movie is not found
-        }
+    public void removeMovie(@PathVariable Long id) {
+        movieService.removeMovie(id);  // Call the service to delete the movie
     }
 
 

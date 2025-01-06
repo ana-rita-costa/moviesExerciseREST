@@ -1,6 +1,7 @@
 package com.moviesExerciseREST.mms_backend.service;
 
 import com.moviesExerciseREST.mms_backend.entity.MovieEntity;
+import com.moviesExerciseREST.mms_backend.exception.DuplicatedRecordException;
 import com.moviesExerciseREST.mms_backend.exception.InvalidValuesException;
 import com.moviesExerciseREST.mms_backend.exception.MissingFieldException;
 import com.moviesExerciseREST.mms_backend.repository.MovieRepository;
@@ -24,9 +25,10 @@ public class MovieServiceImpl implements MovieService {
 
     //Implement CREATE method
     @Override
-    public MovieEntity create(MovieEntity movie) throws MissingFieldException{
+    public MovieEntity create(MovieEntity movie) throws MissingFieldException, DuplicatedRecordException{
         if(movie.getTitle() == null ) throw new MissingFieldException("title");
         if(movie.getDate() == null ) throw new MissingFieldException("date");
+        if(this.movieRepository.existsByTitleAndDate(movie.getTitle(),movie.getDate())) throw new DuplicatedRecordException("Movie");
 
         return movieRepository.save(movie);
     }
@@ -38,8 +40,8 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public Optional<MovieEntity> findById(Long id) {
-        return movieRepository.findById(id);
+    public MovieEntity getMovie(Long id){
+        return this.movieRepository.findById(id).orElse(null);
     }
 
     @Override
@@ -50,7 +52,7 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public List<MovieEntity> findByDate(String date) throws InvalidValuesException{
 
-        if(isValidDate(date)) throw new InvalidValuesException("date");
+        if(!isValidDate(date)) throw new InvalidValuesException("date");
         LocalDate d;
         d=LocalDate.parse(date);
         return movieRepository.findByDate(d);
@@ -100,9 +102,9 @@ public class MovieServiceImpl implements MovieService {
     }
 
     //Support method
-    @Override
+    /*@Override
     public boolean existsByTitleAndDate(String title, LocalDate date) {
         return movieRepository.existsByTitleAndDate(title, date);
-    }
+    }*/
 
 }
