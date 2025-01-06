@@ -1,6 +1,7 @@
 package com.moviesExerciseREST.mms_backend.controller;
 
 import com.moviesExerciseREST.mms_backend.entity.MovieEntity;
+import com.moviesExerciseREST.mms_backend.exception.DuplicatedRecordException;
 import com.moviesExerciseREST.mms_backend.exception.MissingFieldException;
 import com.moviesExerciseREST.mms_backend.service.*;
 import com.moviesExerciseREST.mms_backend.type.ResultType;
@@ -32,8 +33,17 @@ public class MovieController {
     //CREATE Operation
     /*------------------*/
     @PostMapping("/api/movies")
-    public ResponseEntity<MovieEntity> createMovie(@RequestBody MovieEntity movieEnt) throws MissingFieldException {
-        return new ResponseEntity<>(movieService.create(movieEnt), HttpStatus.CREATED);
+    public HashMap<String,Object> createMovie(@RequestBody MovieEntity movieEnt) throws MissingFieldException {
+        ResultType<MovieEntity> resultType = new ResultType<>();
+
+        // Check if a movie with the same name and date already exists
+
+        if (!movieService.existsByTitleAndDate(movieEnt.getTitle(), movieEnt.getDate())) {
+            MovieEntity newMovie = movieService.create(movieEnt);
+            resultType.setResult(newMovie);
+        }
+
+        return resultType.asMap();
     }
 
     //READ Operations

@@ -27,4 +27,6 @@ public interface MovieService {
 
     void removeMovie(Long id);
 
+    boolean existsByTitleAndDate(String title, LocalDate date);
+
 }

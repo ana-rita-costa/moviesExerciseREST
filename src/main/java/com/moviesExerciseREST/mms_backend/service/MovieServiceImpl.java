@@ -99,4 +99,10 @@ public class MovieServiceImpl implements MovieService {
         }
     }
 
+    //Support method
+    @Override
+    public boolean existsByTitleAndDate(String title, LocalDate date) {
+        return movieRepository.existsByTitleAndDate(title, date);
+    }
+
 }
