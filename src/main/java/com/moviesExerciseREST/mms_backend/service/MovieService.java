@@ -5,10 +5,8 @@ import com.moviesExerciseREST.mms_backend.exception.DuplicatedRecordException;
 import com.moviesExerciseREST.mms_backend.exception.InvalidValuesException;
 import com.moviesExerciseREST.mms_backend.exception.MissingFieldException;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 public interface MovieService {
 
@@ -24,8 +22,6 @@ public interface MovieService {
     MovieEntity updateMovie(Long id, Map<String, Object> updates);
 
     void removeMovie(Long id);
-
-    /*boolean existsByTitleAndDate(String title, LocalDate date);*/
 
     MovieEntity getMovie(Long id);
 

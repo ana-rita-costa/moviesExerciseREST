@@ -5,18 +5,14 @@ import com.moviesExerciseREST.mms_backend.exception.DuplicatedRecordException;
 import com.moviesExerciseREST.mms_backend.exception.MissingFieldException;
 import com.moviesExerciseREST.mms_backend.service.*;
 import com.moviesExerciseREST.mms_backend.type.ResultType;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.time.LocalDate;
+
 
 @RestController
-//@RequestMapping("/api/movies")
 public class MovieController {
 
     private final MovieServiceImpl movieService;
@@ -130,6 +126,5 @@ public class MovieController {
     public void removeMovie(@PathVariable Long id) {
         movieService.removeMovie(id);  // Call the service to delete the movie
     }
-
 
 }
