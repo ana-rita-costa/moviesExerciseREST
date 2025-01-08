@@ -26,11 +26,39 @@ public class RatingServiceImpl implements RatingService{
 
     @Override
     public RatingEntity create(RatingEntity rating) throws MissingFieldException, DuplicatedRecordException {
-        if(rating.getUser() == null ) throw new MissingFieldException("user");
-        if(rating.getMovie() == null ) throw new MissingFieldException("movie");
-        if(this.ratingRepository.existsByMovieAndUser(rating.getMovie(), rating.getUser())) throw new DuplicatedRecordException("Rating");
+        if (rating.getUser() == null) {
+            throw new MissingFieldException("user");
+        }
+        if (rating.getMovie() == null) {
+            throw new MissingFieldException("movie");
+        }
+        if (this.ratingRepository.existsByMovieAndUser(rating.getMovie(), rating.getUser())) {
+            throw new DuplicatedRecordException("Rating");
+        }
 
-        return ratingRepository.save(rating);
+        // Save the rating first
+        RatingEntity savedRating = ratingRepository.save(rating);
+
+        // Fetch the complete MovieEntity from the repository
+        MovieEntity movie = movieRepository.findById(rating.getMovie().getId())
+                .orElseThrow(() -> new IllegalStateException("Movie not found"));
+
+        // Retrieve all ratings for the movie
+        List<RatingEntity> movieRatings = ratingRepository.findByMovie(movie);
+
+        // Calculate the average rating for the movie
+        Double averageRating = movieRatings.stream()
+                .mapToDouble(RatingEntity::getRate)  // Extract the rate
+                .average()                          // Calculate average
+                .orElse(0.0);                       // Default to 0 if no ratings
+
+        // Update the rank of the movie
+        movie.setRank(averageRating);  // Set the computed rank
+
+        // Persist the updated movie entity
+        movieRepository.saveAndFlush(movie);  // Ensure immediate persistence
+
+        return savedRating;
     }
 
     @Override

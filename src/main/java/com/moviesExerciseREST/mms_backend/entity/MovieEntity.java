@@ -23,7 +23,7 @@ public class MovieEntity {
     @Column(name = "date", nullable = false)
     private LocalDate date;
 
-    @Column(name = "rank", nullable = false)
+    @Column(name = "rank")
     private Double rank;
 
     @Column(name = "revenue", nullable = false)

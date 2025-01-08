@@ -11,4 +11,5 @@ public interface RatingRepository extends JpaRepository<RatingEntity, Long> {
     boolean existsByMovieAndUser(MovieEntity movie, UserEntity user);
     List<RatingEntity> findByMovie(MovieEntity movie);
 
+    Double findAverageRatingByMovieId(Long id);
 }
