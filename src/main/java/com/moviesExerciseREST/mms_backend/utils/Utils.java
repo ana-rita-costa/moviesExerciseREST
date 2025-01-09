@@ -1,7 +1,13 @@
 package com.moviesExerciseREST.mms_backend.utils;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
@@ -48,5 +54,10 @@ public class Utils {
         return false;
     }
 
+    // Method to decode Base64 string into byte array
+    public byte[] decodeBase64(String base64String) {
+        // Now decode the Base64 string into byte array
+        return Base64.getDecoder().decode(base64String);
+    }
 
 }

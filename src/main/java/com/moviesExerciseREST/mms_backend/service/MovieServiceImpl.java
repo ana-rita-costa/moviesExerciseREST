@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.moviesExerciseREST.mms_backend.utils.Utils.isValidDate;
+import static org.apache.tomcat.util.codec.binary.Base64.decodeBase64;
 
 @Service
 public class MovieServiceImpl implements MovieService {
@@ -29,6 +30,13 @@ public class MovieServiceImpl implements MovieService {
         if(movie.getTitle() == null ) throw new MissingFieldException("title");
         if(movie.getDate() == null ) throw new MissingFieldException("date");
         if(this.movieRepository.existsByTitleAndDate(movie.getTitle(),movie.getDate())) throw new DuplicatedRecordException("Movie");
+
+
+        if (movie.getPoster() != null && movie.getPoster().length > 0) {
+            // Convert byte[] to String and pass to decodeBase64 (assuming poster is a Base64 string)
+            String base64String = new String(movie.getPoster());
+            movie.setPoster(decodeBase64(base64String));  // Decoding the Base64 string to byte[]
+        }
 
         return movieRepository.save(movie);
     }

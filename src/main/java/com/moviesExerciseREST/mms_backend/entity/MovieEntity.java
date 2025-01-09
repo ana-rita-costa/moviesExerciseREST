@@ -86,15 +86,6 @@ public class MovieEntity {
         this.revenue = revenue;
     }
 
-    /*public Blob getPoster() {
-        return poster;
-    }
-
-    public void setPoster(Blob poster) {
-        this.poster = poster;
-    }*/
-
-
    public byte[] getPoster() {
         return poster;
     }
