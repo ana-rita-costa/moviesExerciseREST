@@ -102,6 +102,12 @@ public class MovieController {
 
     }
 
+    //Find Movies ordered by Rating
+    @GetMapping("/api/movies/sortBy")
+    public List<MovieEntity> getAllMovies(@RequestParam(defaultValue = "asc") String sortBy) {
+        return movieService.findAll(sortBy);
+    }
+
     //UPDATE Operation
     /*------------------*/
     @PatchMapping("/api/movies/{id}")

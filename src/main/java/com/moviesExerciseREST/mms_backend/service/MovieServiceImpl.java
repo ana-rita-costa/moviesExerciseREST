@@ -5,6 +5,7 @@ import com.moviesExerciseREST.mms_backend.exception.DuplicatedRecordException;
 import com.moviesExerciseREST.mms_backend.exception.InvalidValuesException;
 import com.moviesExerciseREST.mms_backend.exception.MissingFieldException;
 import com.moviesExerciseREST.mms_backend.repository.MovieRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -31,9 +32,7 @@ public class MovieServiceImpl implements MovieService {
         if(movie.getDate() == null ) throw new MissingFieldException("date");
         if(this.movieRepository.existsByTitleAndDate(movie.getTitle(),movie.getDate())) throw new DuplicatedRecordException("Movie");
 
-
         if (movie.getPoster() != null && movie.getPoster().length > 0) {
-            // Convert byte[] to String and pass to decodeBase64 (assuming poster is a Base64 string)
             String base64String = new String(movie.getPoster());
             movie.setPoster(decodeBase64(base64String));  // Decoding the Base64 string to byte[]
         }
@@ -45,6 +44,12 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public List<MovieEntity> findAll() {
         return movieRepository.findAll();
+    }
+
+    @Override
+    public List<MovieEntity> findAll(String sortBy) {
+        Sort sort = "desc".equals(sortBy) ? Sort.by(Sort.Order.desc("rank")) : Sort.by(Sort.Order.asc("rank"));
+        return movieRepository.findAll(sort);
     }
 
     @Override
@@ -89,6 +94,13 @@ public class MovieServiceImpl implements MovieService {
                     case "revenue":
                         movie.setRevenue(Double.valueOf(value.toString()));
                         break;
+                    case "poster":
+                        // Check if the poster is a base64 string and decode it
+                        if (value instanceof String) {
+                            String base64String = (String) value;
+                            movie.setPoster(decodeBase64(base64String));  // Decoding the base64 string to byte[]
+                        }
+                        break;
                 }
             });
 
@@ -108,11 +120,5 @@ public class MovieServiceImpl implements MovieService {
             throw new RuntimeException("Movie not found");
         }
     }
-
-    //Support method
-    /*@Override
-    public boolean existsByTitleAndDate(String title, LocalDate date) {
-        return movieRepository.existsByTitleAndDate(title, date);
-    }*/
 
 }

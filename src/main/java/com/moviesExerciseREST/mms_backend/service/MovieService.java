@@ -4,6 +4,7 @@ import com.moviesExerciseREST.mms_backend.entity.MovieEntity;
 import com.moviesExerciseREST.mms_backend.exception.DuplicatedRecordException;
 import com.moviesExerciseREST.mms_backend.exception.InvalidValuesException;
 import com.moviesExerciseREST.mms_backend.exception.MissingFieldException;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ public interface MovieService {
     MovieEntity create(MovieEntity movie) throws MissingFieldException, DuplicatedRecordException;
 
     List<MovieEntity> findAll();
+    List<MovieEntity> findAll(String sortBy);
 
     // Method to find movies by title
     List<MovieEntity> findByTitle(String title);
