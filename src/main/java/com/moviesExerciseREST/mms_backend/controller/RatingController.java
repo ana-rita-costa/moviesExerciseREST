@@ -83,4 +83,9 @@ public class RatingController {
         }
     }
 
+    @DeleteMapping("/api/ratings/{id}")
+    public void removeRating(@PathVariable Long id) {
+        ratingService.removeRating(id);  // Call the service to delete the movie
+    }
+
 }

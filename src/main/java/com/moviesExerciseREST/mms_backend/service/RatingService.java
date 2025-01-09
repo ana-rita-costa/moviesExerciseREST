@@ -15,4 +15,6 @@ public interface RatingService {
     List<RatingEntity> findByMovie(MovieEntity movie);
     List<RatingEntity> getRatingsByMovie(String movie);
     RatingEntity updateRating(Long id, Map<String, Object> updates);
+    void removeRating(Long id);
+
 }

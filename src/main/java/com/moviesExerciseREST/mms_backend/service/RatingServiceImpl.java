@@ -127,5 +127,13 @@ public class RatingServiceImpl implements RatingService{
         }
     }
 
+    @Override
+    public void removeRating(Long id) {
+        if (ratingRepository.existsById(id)) {  // Optional: Check if the movie exists first
+            ratingRepository.deleteById(id);    // This should work now
+        } else {
+            throw new RuntimeException("Rating not found");
+        }
+    }
 
 }
