@@ -33,8 +33,17 @@ public class MovieEntity {
     //private Blob poster;
     private byte[] poster;
 
+    @Transient
+    private String base64Poster;
 
-    /*public MovieEntity(Long id, String title, LocalDate date, Double rank, Double revenue) {
+    public String getBase64Poster() {
+        return base64Poster;
+    }
+
+    public void setBase64Poster(String base64Poster) {
+        this.base64Poster = base64Poster;
+    }
+/*public MovieEntity(Long id, String title, LocalDate date, Double rank, Double revenue) {
         this.id = id;
         this.title = title;
         this.date = date;

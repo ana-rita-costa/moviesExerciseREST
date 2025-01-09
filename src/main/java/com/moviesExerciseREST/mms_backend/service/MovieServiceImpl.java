@@ -114,6 +114,8 @@ public class MovieServiceImpl implements MovieService {
     //Implement DELETE method
     @Override
     public void removeMovie(Long id) {
+
+        movieRepository.deleteById(id);
         if (movieRepository.existsById(id)) {  // Optional: Check if the movie exists first
             movieRepository.deleteById(id);    // This should work now
         } else {

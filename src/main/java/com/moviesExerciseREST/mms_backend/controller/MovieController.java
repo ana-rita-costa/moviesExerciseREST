@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import java.util.Base64;
 
 @RestController
 public class MovieController {
@@ -27,7 +27,7 @@ public class MovieController {
 
     //CREATE Operation
     /*------------------*/
-    @PostMapping("/api/movies")
+    @PostMapping("/api/movies/create")
     public HashMap<String,Object> createMovie(@RequestBody MovieEntity movieEnt) throws MissingFieldException, DuplicatedRecordException {
         ResultType<MovieEntity> resultType = new ResultType<>();
 
@@ -58,6 +58,18 @@ public class MovieController {
             } else {
                 // Return all movies if no date is provided
                 List<MovieEntity> movies = movieService.findAll();
+
+                // Process each movie to encode poster bytes to Base64
+                for (MovieEntity movie : movies) {
+                    if (movie.getPoster() != null) { // Check if poster exists
+                        String base64Poster = Base64.getEncoder().encodeToString(movie.getPoster());
+                        movie.setBase64Poster("data:image/jpeg;base64," + base64Poster);
+                    } else {
+                        // If no poster, set a placeholder or null
+                        movie.setBase64Poster(null);
+                    }
+                }
+
                 resultType.setResult(movies);
                 return resultType.asMap(); // Return all movies found
             }

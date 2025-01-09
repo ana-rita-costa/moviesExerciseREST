@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movies Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        nav {
+            background-color: #444;
+            overflow: hidden;
+        }
+        nav a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            text-decoration: none;
+        }
+        nav a:hover {
+            background-color: #555;
+        }
+        section {
+            display: none;
+            padding: 1rem;
+        }
+        section.active {
+            display: block;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 0.5rem;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        button {
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        img {
+            max-width: 100px; /* Adjust the size of the poster */
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Movies Application</h1>
+</header>
+<nav>
+    <a href="#" onclick="switchView('movies')">Movies</a>
+    <a href="#" onclick="switchView('ratings')">Ratings</a>
+    <a href="#" onclick="switchView('users')">Users</a>
+</nav>
+<main>
+    <section id="movies" class="active">
+        <h2>Movies List</h2>
+        <button onclick="loadMovies()">Reload Movies</button>
+        <table id="moviesTable">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Date</th>
+                <th>Rank</th>
+                <th>Revenue</th>
+                <th>Poster</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Rows will be populated by JavaScript -->
+            </tbody>
+        </table>
+    </section>
+    <section id="ratings">
+        <h2>Ratings List</h2>
+        <button onclick="loadRatings()">Reload Ratings</button>
+        <table id="ratingsTable">
+            <thead>
+            <tr>
+                <th>Movie ID</th>
+                <th>User ID</th>
+                <th>Rate</th>
+                <th>Comment</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Rows will be populated by JavaScript -->
+            </tbody>
+        </table>
+    </section>
+    <section id="users">
+        <h2>Users List</h2>
+        <button onclick="loadUsers()">Reload Users</button>
+        <table id="usersTable">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Rows will be populated by JavaScript -->
+            </tbody>
+        </table>
+    </section>
+</main>
+<script src="app.js"></script>
+</body>
+</html>

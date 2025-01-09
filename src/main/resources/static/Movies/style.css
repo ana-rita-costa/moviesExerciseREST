@@ -1,0 +1,87 @@
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+    header {
+        background-color: #333;
+        color: white;
+        padding: 1rem;
+        text-align: center;
+    }
+    nav {
+        background-color: #444;
+        overflow: hidden;
+    }
+    nav a {
+        float: left;
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 1rem;
+        text-decoration: none;
+    }
+    nav a:hover {
+        background-color: #555;
+    }
+    section {
+        display: none;
+        padding: 1rem;
+    }
+    section.active {
+        display: block;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+    }
+    table, th, td {
+        border: 1px solid #ddd;
+    }
+    th, td {
+        padding: 0.5rem;
+        text-align: left;
+    }
+    th {
+        background-color: #f4f4f4;
+    }
+    button {
+        margin-top: 1rem;
+        padding: 0.5rem 1rem;
+        background-color: #007BFF;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+    button:hover {
+        background-color: #0056b3;
+    }
+    img {
+        max-width: 100px; /* Adjust the size of the poster */
+        height: auto;
+    }
+
+    .card {
+      border-radius: 8px;
+      overflow: hidden; /* Ensures images don't overflow */
+    }
+
+    .card img {
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+    }
+
+    .movie-card {
+        cursor: pointer;
+        transition: transform 0.2s ease;
+    }
+
+    .movie-card:hover {
+        transform: scale(1.02); /* Slight zoom effect on hover */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .selected {
+        border: 2px solid green !important;
+    }
