@@ -8,9 +8,10 @@ import com.moviesExerciseREST.mms_backend.repository.MovieRepository;
 import com.moviesExerciseREST.mms_backend.repository.RatingRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.*;
+
+import static org.apache.tomcat.util.codec.binary.Base64.decodeBase64;
 
 @Service
 public class RatingServiceImpl implements RatingService{
@@ -91,6 +92,39 @@ public class RatingServiceImpl implements RatingService{
         }
 
         return allRatings; // Return the list of ratings for the movies
+    }
+
+    @Override
+    public RatingEntity updateRating(Long id, Map<String, Object> updates) {
+
+        Optional<RatingEntity> optionalRating = ratingRepository.findById(id);
+
+        if (optionalRating.isPresent()) {
+            RatingEntity rating = optionalRating.get();
+
+            // Apply updates (using a utility or manually)
+            updates.forEach((key, value) -> {
+                switch (key) {
+                    case "movie":
+                        if (value instanceof Number)  rating.setMovieById(((Number) value).longValue());
+                        break;
+                    case "user":
+                        if (value instanceof Number)  rating.setUserById(((Number) value).longValue());
+                        break;
+                    case "rate":
+                        rating.setRate(Double.valueOf(value.toString()));
+                        break;
+                    case "comment":
+                        rating.setComment((String) value);
+                        break;
+                }
+            });
+
+            // Save updated movie
+            return ratingRepository.save(rating);
+        } else {
+            throw new RuntimeException("Rating not found");
+        }
     }
 
 

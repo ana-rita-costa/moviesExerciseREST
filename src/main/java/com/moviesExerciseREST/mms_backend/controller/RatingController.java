@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class RatingController {
@@ -65,4 +66,21 @@ public class RatingController {
         }
 
     }
+
+    @PutMapping("/api/ratings/{id}")
+    public HashMap<String,Object> updateRating(
+            @PathVariable Long id,
+            @RequestBody Map<String, Object> updates) {
+
+        ResultType<RatingEntity> resultType = new ResultType<>();
+        try {
+            RatingEntity updatedRating = ratingService.updateRating(id, updates);
+            resultType.setResult(updatedRating);
+            return resultType.asMap();
+        } catch(Exception e){
+            resultType.setError(e.toString());
+            return resultType.asMap();
+        }
+    }
+
 }

@@ -30,7 +30,7 @@ public class RatingEntity {
     private Double rate;
 
     @Column(name = "comment")
-    private Double comment;
+    private String comment;
 
     //Getters and setters
 
@@ -67,11 +67,11 @@ public class RatingEntity {
         this.rate = rate;
     }
 
-    public Double getComment() {
+    public String getComment() {
         return comment;
     }
 
-    public void setComment(Double comment) {
+    public void setComment(String comment) {
         this.comment = comment;
     }
 
